@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { useMarketplace } from "@/contexts/MarketplaceContext";
 
 function PerServiceSplitEditor() {
   const { settings, setSettings } = usePayments();
@@ -59,7 +58,6 @@ function PerServiceSplitEditor() {
 
 export default function AdminPaymentSettings() {
   const { settings, setSettings, hasRazorpayEnv, hasStripeEnv } = usePayments();
-  const { ownerStoreId } = useMarketplace();
   const [business, setBusiness] = useState(settings.business);
   const [split, setSplit] = useState(settings.defaultSplit);
 
