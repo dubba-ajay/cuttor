@@ -167,30 +167,71 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
         </div>
 
         {/* Results */}
-        <div className="max-h-96 overflow-auto divide-y">
+        <div className="max-h-96 overflow-auto">
           {(!query && !locQuery) && (
             <div className="p-4 text-sm text-muted-foreground">Start typing to search stores and services. Use the location field to filter by area.</div>
           )}
-          {results.length === 0 && (query || locQuery) && (
+
+          {/* Categories */}
+          {results.categories.length > 0 && (
+            <div className="py-2">
+              <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Categories</div>
+              {results.categories.map(c => (
+                <button key={c.key} className="w-full text-left px-4 py-2 hover:bg-accent/50" onClick={()=> { onOpenChange(false); navigate(c.path); }}>
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium">{c.label}</div>
+                    <Badge variant="outline">Open</Badge>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Services */}
+          {results.services.length > 0 && (
+            <div className="py-2">
+              <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Services</div>
+              {results.services.map(svc => (
+                <button key={svc.name} className="w-full text-left px-4 py-2 hover:bg-accent/50" onClick={()=> {
+                  const match = allStores.find(s => s.category === svc.category && s.specialties.includes(svc.name));
+                  if (match) go(match.id, match.category);
+                }}>
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium">{svc.name}</div>
+                    <Badge variant="outline">{categoryLabel(svc.category)}</Badge>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Stores */}
+          {results.stores.length > 0 && (
+            <div className="py-2">
+              <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Stores</div>
+              {results.stores.map(s => (
+                <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50" onClick={()=> go(s.id, s.category)}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="font-medium truncate">{s.name}</div>
+                      <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />{s.rating} ({s.reviews})</span>
+                        <span>•</span>
+                        <span>{categoryLabel(s.category)}</span>
+                        <span>•</span>
+                        <span>{s.address}</span>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="whitespace-nowrap">View</Badge>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {(query || locQuery) && results.categories.length + results.services.length + results.stores.length === 0 && (
             <div className="p-4 text-sm text-muted-foreground">No results found.</div>
           )}
-          {results.map(s => (
-            <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50" onClick={()=> go(s.id, s.category)}>
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="font-medium truncate">{s.name}</div>
-                  <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />{s.rating} ({s.reviews})</span>
-                    <span>•</span>
-                    <span>{categoryLabel(s.category)}</span>
-                    <span>•</span>
-                    <span>{s.address}</span>
-                  </div>
-                </div>
-                <Badge variant="outline" className="whitespace-nowrap">View</Badge>
-              </div>
-            </button>
-          ))}
         </div>
       </DialogContent>
     </Dialog>
