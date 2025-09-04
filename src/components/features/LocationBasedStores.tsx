@@ -1,23 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Star, MapPin, Clock, Award, Verified, ArrowRight, Navigation, Filter, Calendar, Phone } from "lucide-react";
+import { Star, MapPin, Clock, Award, Verified, ArrowRight, Navigation, Filter, Calendar, Phone, Search as SearchIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { useLocation } from "@/contexts/LocationContext";
 
 const LocationBasedStores = () => {
   const { location, requestLocation, isLoading } = useLocation();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Generate dynamic stores based on location
   const generateStores = (city: string) => {
     const baseStores = [
       {
         id: 101,
-        name: "Elite Men's Salon",
+        name: "Elite Men's Grooming",
         category: "mens-hair",
         categoryLabel: "Men's Hair",
         rating: 4.9,
@@ -28,7 +30,7 @@ const LocationBasedStores = () => {
         specialties: ["Premium Cuts", "Beard Styling"],
         isTopRated: true,
         isVerified: true,
-        link: "/mens-hair",
+        link: `/salon/101`,
         startingPrice: "₹200",
         emoji: "💈",
         openNow: true,
@@ -49,7 +51,7 @@ const LocationBasedStores = () => {
         specialties: ["Hair Styling", "Facials"],
         isTopRated: true,
         isVerified: true,
-        link: "/womens-beauty",
+        link: `/womens-beauty/salon/201`,
         startingPrice: "₹300",
         emoji: "💄",
         openNow: true,
@@ -70,7 +72,7 @@ const LocationBasedStores = () => {
         specialties: ["Nail Art", "Gel Extensions"],
         isTopRated: true,
         isVerified: true,
-        link: "/nail-studios",
+        link: `/nail-studios/salon/301`,
         startingPrice: "₹150",
         emoji: "💅",
         openNow: false,
@@ -91,7 +93,7 @@ const LocationBasedStores = () => {
         specialties: ["Bridal Makeup", "Events"],
         isTopRated: true,
         isVerified: true,
-        link: "/makeup-artists",
+        link: `/makeup-artists/salon/401`,
         startingPrice: "₹500",
         emoji: "���",
         openNow: true,
@@ -111,7 +113,7 @@ const LocationBasedStores = () => {
         priceRange: "₹",
         specialties: ["Traditional Cuts", "Shaves"],
         isVerified: true,
-        link: "/mens-hair",
+        link: `/salon/102`,
         startingPrice: "₹150",
         emoji: "✂️",
         openNow: true,
@@ -131,7 +133,7 @@ const LocationBasedStores = () => {
         priceRange: "₹₹₹",
         specialties: ["Luxury Treatments", "Wellness"],
         isVerified: true,
-        link: "/womens-beauty",
+        link: `/womens-beauty/salon/202`,
         startingPrice: "₹400",
         emoji: "🌸",
         openNow: true,
@@ -149,7 +151,19 @@ const LocationBasedStores = () => {
 
   const stores = generateStores(location?.city || "Delhi");
 
+  const matchesQuery = (store: any) => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      store.name.toLowerCase().includes(q) ||
+      store.address.toLowerCase().includes(q) ||
+      store.categoryLabel.toLowerCase().includes(q) ||
+      store.specialties.some((s: string) => s.toLowerCase().includes(q))
+    );
+  };
+
   const filteredStores = stores
+    .filter(matchesQuery)
     .filter(store => selectedCategory === "all" || store.category === selectedCategory)
     .sort((a, b) => {
       switch (sortBy) {
@@ -204,6 +218,19 @@ const LocationBasedStores = () => {
               </Button>
             </div>
           )}
+        </div>
+
+        {/* Search */}
+        <div className="max-w-2xl mx-auto mb-6 w-full">
+          <div className="relative">
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={searchTerm}
+              onChange={(e)=> setSearchTerm(e.target.value)}
+              placeholder="Search stores, services, or areas..."
+              className="pl-9"
+            />
+          </div>
         </div>
 
         {/* Filters */}
@@ -366,7 +393,7 @@ const LocationBasedStores = () => {
                         className="w-full text-sm group-hover:scale-105 transition-transform bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold border-0 rounded-xl"
                       >
                         <Calendar className="w-4 h-4 mr-1" />
-                        Book Online
+                        View Store
                       </Button>
                     </Link>
                     <Button 
