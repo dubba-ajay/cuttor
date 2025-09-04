@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { MapPin, Search, Crosshair, X, Star } from "lucide-react";
+import { Search, X, Star } from "lucide-react";
 import { allStores } from "@/components/features/AllStores";
 import { useLocation as useAppLocation } from "@/contexts/LocationContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props { open: boolean; onOpenChange(open: boolean): void; }
 
@@ -32,18 +32,21 @@ const linkForStore = (store: { id: number; category: string }) => {
 
 export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
   const navigate = useNavigate();
-  const { location, requestLocation, setManualLocation, isLoading, nearbyAreas } = useAppLocation();
+  const { user } = useAuth();
+  const { location, requestLocation } = useAppLocation();
   const [query, setQuery] = useState("");
-  const [locQuery, setLocQuery] = useState("");
 
   useEffect(() => {
-    if (open) setLocQuery(location?.city || "");
-    else setQuery("");
-  }, [open, location?.city]);
+    if (open) {
+      if (user && !location?.latitude) requestLocation();
+    } else {
+      setQuery("");
+    }
+  }, [open, user, location?.latitude, requestLocation]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const lq = locQuery.trim().toLowerCase();
+    const city = (location?.city || "").toLowerCase();
 
     const stores = allStores
       .filter(s => (q ? (
@@ -52,7 +55,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
         s.description.toLowerCase().includes(q) ||
         s.specialties.some(x => x.toLowerCase().includes(q))
       ) : true))
-      .filter(s => (lq ? (s.address.toLowerCase().includes(lq)) : true));
+      .filter(s => (city ? s.address.toLowerCase().includes(city) : true));
 
     // categories
     const categoryDefs = [
@@ -80,7 +83,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
       categories,
       services: services.slice(0, 8),
     };
-  }, [query, locQuery]);
+  }, [query, location?.city]);
 
   const go = (id: number, category: string) => {
     onOpenChange(false);
@@ -116,60 +119,36 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
           <DialogTitle>Search</DialogTitle>
         </DialogHeader>
         <div className="p-4 border-b bg-white">
-          {/* Booksy-style stacked fields on mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
-            <div className="sm:col-span-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  autoFocus
-                  placeholder="Search services, stores, or categories"
-                  value={query}
-                  onChange={(e)=> setQuery(e.target.value)}
-                  onKeyDown={submitFirst}
-                  className="pl-9 rounded-full"
-                />
-                {query && (
-                  <button aria-label="Clear" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
-                )}
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {presetCategories.map(p => (
-                  <button key={p.label} onClick={()=> setQuery(p.q)} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50">
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="sm:col-span-2">
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder="Location (city/area)"
-                  value={locQuery}
-                  onChange={(e)=> setLocQuery(e.target.value)}
-                  className="pl-9 rounded-full"
-                />
-                {locQuery && (
-                  <button aria-label="Clear location" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setLocQuery("")}> <X className="w-4 h-4"/> </button>
-                )}
-              </div>
-              <div className="mt-2 flex items-center gap-2 overflow-x-auto">
-                <Button size="sm" variant="outline" className="rounded-full" onClick={()=> requestLocation()} disabled={isLoading}>
-                  <Crosshair className="w-4 h-4 mr-1"/> {isLoading? 'Locating...' : 'Use GPS'}
-                </Button>
-                {nearbyAreas.slice(0,5).map(a => (
-                  <button key={a} onClick={()=> { setLocQuery(a); setManualLocation(a); }} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50 whitespace-nowrap">{a}</button>
-                ))}
-              </div>
-            </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              autoFocus
+              placeholder="Search services, stores, or categories"
+              value={query}
+              onChange={(e)=> setQuery(e.target.value)}
+              onKeyDown={submitFirst}
+              className="pl-9 rounded-full shadow"
+            />
+            {query && (
+              <button aria-label="Clear" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
+            )}
           </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {presetCategories.map(p => (
+              <button key={p.label} onClick={()=> setQuery(p.q)} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50">
+                {p.label}
+              </button>
+            ))}
+          </div>
+          {location?.city && (
+            <div className="mt-2 text-xs text-muted-foreground">Results near <span className="font-medium">{location.city}</span></div>
+          )}
         </div>
 
         {/* Results */}
         <div className="max-h-96 overflow-auto">
-          {(!query && !locQuery) && (
-            <div className="p-4 text-sm text-muted-foreground">Start typing to search stores and services. Use the location field to filter by area.</div>
+          {!query && (
+            <div className="p-4 text-sm text-muted-foreground">Start typing to search stores and services.</div>
           )}
 
           {/* Categories */}
@@ -229,7 +208,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
             </div>
           )}
 
-          {(query || locQuery) && results.categories.length + results.services.length + results.stores.length === 0 && (
+          {query && results.categories.length + results.services.length + results.stores.length === 0 && (
             <div className="p-4 text-sm text-muted-foreground">No results found.</div>
           )}
         </div>
