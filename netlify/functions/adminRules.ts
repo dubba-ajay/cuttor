@@ -3,6 +3,9 @@ import { prisma } from "./_prisma";
 
 const handler: Handler = async (event) => {
   const method = event.httpMethod;
+  const adminKey = process.env.ADMIN_API_KEY || process.env.VITE_ADMIN_API_KEY;
+  const provided = event.headers["x-admin-key"] || event.headers["X-Admin-Key"];
+  if (!adminKey || provided !== adminKey) return { statusCode: 401, body: "unauthorized" } as any;
   try {
     if (method === "GET") {
       const list = await prisma.commissionRule.findMany({ orderBy: { priority: "desc" } });
