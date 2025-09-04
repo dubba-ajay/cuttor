@@ -57,7 +57,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden">
+      <DialogContent className="p-0 overflow-hidden" aria-label="Search dialog">
         <div className="border-b p-3">
           <Input
             autoFocus
