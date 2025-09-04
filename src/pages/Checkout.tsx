@@ -132,7 +132,13 @@ export default function Checkout() {
                   </Tabs>
 
                   <div className="mt-6 space-y-2">
-                    <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-base py-6">Proceed to Pay</Button>
+                    <Button onClick={() => {
+                      // Simulate creating escrow and success redirect
+                      try {
+                        const evt = new CustomEvent('checkout:create');
+                        window.dispatchEvent(evt);
+                      } catch {}
+                    }} className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-base py-6">Proceed to Pay</Button>
                     <div className="text-xs text-center text-muted-foreground">🔒 100% Secure Payments</div>
                   </div>
                 </CardContent>
