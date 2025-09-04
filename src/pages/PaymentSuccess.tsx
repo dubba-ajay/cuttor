@@ -15,7 +15,8 @@ function ConfettiBg() {
 }
 
 export default function PaymentSuccess() {
-  const txn = { id: "TXN" + Math.random().toString(36).slice(2,8).toUpperCase(), amount: (history.state?.usr?.total ?? 0), method: (history.state?.usr?.gateway ?? 'razorpay'), date: new Date().toLocaleString(), split: history.state?.usr?.split };
+  const usr = (history.state as any)?.usr || {};
+  const txn = { id: (usr.orderId || ("TXN" + Math.random().toString(36).slice(2,8).toUpperCase())), amount: (usr.total ?? 0), method: (usr.gateway ?? 'razorpay'), date: new Date().toLocaleString(), split: usr.split, status: usr.status || 'created' };
   return (
     <div className="relative min-h-screen flex flex-col bg-white">
       <Header />
@@ -35,6 +36,7 @@ export default function PaymentSuccess() {
                 <div className="flex justify-between"><span>Transaction ID</span><span className="font-medium">{txn.id}</span></div>
                 <div className="flex justify-between"><span>Amount Paid</span><span className="font-medium">₹{txn.amount.toLocaleString('en-IN')}</span></div>
                 <div className="flex justify-between"><span>Payment Method</span><span className="font-medium">{txn.method}</span></div>
+                <div className="flex justify-between"><span>Status</span><span className="font-medium capitalize">{txn.status}</span></div>
                 <div className="flex justify-between"><span>Date</span><span className="font-medium">{txn.date}</span></div>
               </CardContent>
             </Card>
