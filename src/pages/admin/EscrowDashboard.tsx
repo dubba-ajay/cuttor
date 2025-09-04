@@ -1,11 +1,12 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { usePayments } from "@/contexts/PaymentContext";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function EscrowDashboard() {
-  const { escrows, payouts, refunds } = usePayments();
+  const { escrows, payouts, refunds, releaseEscrow, refundEscrow } = usePayments();
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
@@ -24,13 +25,21 @@ export default function EscrowDashboard() {
                 <CardContent className="space-y-2">
                   {escrows.length === 0 && <div className="text-sm text-muted-foreground">No records</div>}
                   {escrows.map(e => (
-                    <div key={e.id} className="grid grid-cols-2 md:grid-cols-6 gap-2 text-sm border-b py-2">
+                    <div key={e.id} className="grid grid-cols-2 md:grid-cols-7 gap-2 text-sm border-b py-2 items-center">
                       <div>Booking: <span className="font-medium">{e.bookingId}</span></div>
                       <div>Store: {e.storeId}</div>
                       <div>Amount: ₹{e.amount.toLocaleString('en-IN')}</div>
                       <div>Tax: ₹{e.tax.toLocaleString('en-IN')}</div>
                       <div>Status: <span className="font-medium">{e.status}</span></div>
                       <div>Date: {new Date(e.createdAt).toLocaleString()}</div>
+                      <div className="flex gap-2 justify-end">
+                        {e.status === 'pending' && (
+                          <>
+                            <Button size="sm" onClick={() => { try { releaseEscrow(e.bookingId); alert('Payouts released'); } catch (err:any) { alert(err.message||'Failed to release'); } }}>Release</Button>
+                            <Button size="sm" variant="outline" onClick={() => { const amtStr = prompt('Refund amount (₹)', String(e.amount)); const amt = Math.max(0, Math.min(e.amount, Number(amtStr)||0)); const reason = prompt('Reason (optional)')||undefined; if (!amt) return; try { refundEscrow(e.bookingId, amt, reason); alert('Refund recorded'); } catch (err:any) { alert(err.message||'Refund failed'); } }}>Refund</Button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </CardContent>
