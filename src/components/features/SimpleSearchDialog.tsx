@@ -44,15 +44,42 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     const lq = locQuery.trim().toLowerCase();
-    return allStores
+
+    const stores = allStores
       .filter(s => (q ? (
         s.name.toLowerCase().includes(q) ||
         s.address.toLowerCase().includes(q) ||
         s.description.toLowerCase().includes(q) ||
         s.specialties.some(x => x.toLowerCase().includes(q))
       ) : true))
-      .filter(s => (lq ? (s.address.toLowerCase().includes(lq)) : true))
-      .slice(0, 12);
+      .filter(s => (lq ? (s.address.toLowerCase().includes(lq)) : true));
+
+    // categories
+    const categoryDefs = [
+      { key: "mens-hair", label: "Men's Hair", path: "/mens-hair" },
+      { key: "womens-beauty", label: "Women's Beauty", path: "/womens-beauty" },
+      { key: "nail-studios", label: "Nail Studios", path: "/nail-studios" },
+      { key: "makeup-artists", label: "Makeup Artists", path: "/makeup-artists" },
+    ];
+    const categories = categoryDefs.filter(c => !q || c.label.toLowerCase().includes(q) || c.key.includes(q));
+
+    // services (from specialties across stores)
+    const svcMap = new Map<string, string>(); // service -> category key (dominant)
+    allStores.forEach(s => s.specialties.forEach(sp => {
+      const k = sp.trim();
+      const prev = svcMap.get(k) || s.category;
+      // simple heuristic: prefer existing, else current
+      svcMap.set(k, prev);
+    }));
+    const services = Array.from(svcMap.entries())
+      .filter(([name]) => q && name.toLowerCase().includes(q))
+      .map(([name, cat]) => ({ name, category: cat }));
+
+    return {
+      stores: stores.slice(0, 12),
+      categories,
+      services: services.slice(0, 8),
+    };
   }, [query, locQuery]);
 
   const go = (id: number, category: string) => {
