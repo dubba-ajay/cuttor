@@ -39,6 +39,17 @@ export default function PaymentSuccess() {
               </CardContent>
             </Card>
 
+            {txn.split && (
+              <Card>
+                <CardHeader><CardTitle>Split Breakdown</CardTitle></CardHeader>
+                <CardContent className="text-sm space-y-1">
+                  <div className="flex justify-between"><span>Store</span><span className="font-medium">₹{Math.round((txn.split.rule.storePct/100)*(txn.amount || 0)).toLocaleString('en-IN')}</span></div>
+                  <div className="flex justify-between"><span>Freelancer</span><span className="font-medium">₹{Math.round((txn.split.rule.freelancerPct/100)*(txn.amount || 0)).toLocaleString('en-IN')}</span></div>
+                  <div className="flex justify-between"><span>Platform</span><span className="font-medium">₹{Math.max(0, (txn.amount || 0) - Math.round((txn.split.rule.storePct/100)*(txn.amount || 0)) - Math.round((txn.split.rule.freelancerPct/100)*(txn.amount || 0))).toLocaleString('en-IN')}</span></div>
+                </CardContent>
+              </Card>
+            )}
+
             <Button className="rounded-xl">Go to Dashboard</Button>
             <div className="text-xs text-muted-foreground">Need help? Contact Support</div>
           </div>
