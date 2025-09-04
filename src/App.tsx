@@ -32,6 +32,7 @@ import Subscription from "./pages/Subscription";
 import RefundStatus from "./pages/RefundStatus";
 import AdminPaymentSettings from "./pages/admin/PaymentSettings";
 import EscrowDashboard from "./pages/admin/EscrowDashboard";
+import Nearby from "./pages/Nearby";
 
 const queryClient = new QueryClient();
 
