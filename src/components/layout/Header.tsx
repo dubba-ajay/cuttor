@@ -6,7 +6,7 @@ import AuthDialog from "@/components/auth/AuthDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import HeaderSearch from "@/components/features/HeaderSearch";
+import SimpleSearchDialog from "@/components/features/SimpleSearchDialog";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -143,7 +143,7 @@ const Header = () => {
           </div>
         )}
       </div>
-      <HeaderSearch open={searchOpen} onOpenChange={setSearchOpen} />
+      <SimpleSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 };
