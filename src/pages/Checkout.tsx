@@ -21,6 +21,8 @@ function ProgressBar() {
   );
 }
 
+import useCheckout from "@/hooks/useCheckout";
+
 export default function Checkout() {
   const item = {
     id: 1,
