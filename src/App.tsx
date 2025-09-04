@@ -22,6 +22,13 @@ import NotFound from "./pages/NotFound";
 import ServiceDetail from "./pages/ServiceDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailed from "./pages/PaymentFailed";
+import Transactions from "./pages/Transactions";
+import AdminTransactions from "./pages/AdminTransactions";
+import Subscription from "./pages/Subscription";
+import RefundStatus from "./pages/RefundStatus";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +54,13 @@ const App = () => (
             <Route path="/all-stores" element={<AllStoresPage />} />
             <Route path="/service/:id" element={<ServiceDetail />} />
             <Route path="/about" element={<About />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/failed" element={<PaymentFailed />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/admin/transactions" element={<RequireRole role="owner"><AdminTransactions /></RequireRole>} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route path="/refund-status" element={<RefundStatus />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/user-dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
             <Route path="/store-owner-dashboard" element={<RequireRole role="owner"><StoreOwnerDashboard /></RequireRole>} />
