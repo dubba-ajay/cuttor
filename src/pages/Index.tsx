@@ -28,7 +28,10 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="pt-16 space-y-16">
+      <main className="pt-16 space-y-10">
+        <div className="container mx-auto px-4 lg:px-6">
+          <MobileSearchBar />
+        </div>
         <CategoryHeroSlider category="mens-hair" showTabs={true} />
         <TopRatedHeroStores />
         <MensStoresModern category="all" />
