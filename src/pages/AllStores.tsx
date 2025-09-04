@@ -1,5 +1,6 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import MensStoresModern from "@/components/features/MensStoresModern";
 
 const AllStoresPage = () => {
