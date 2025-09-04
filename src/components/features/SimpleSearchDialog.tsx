@@ -88,8 +88,17 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
   };
 
   const submitFirst: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === 'Enter' && results[0]) {
-      go(results[0].id, results[0].category);
+    if (e.key === 'Enter') {
+      if (results.stores[0]) return go(results.stores[0].id, results.stores[0].category);
+      if (results.services[0]) {
+        const svc = results.services[0];
+        const match = allStores.find(s => s.category === svc.category && s.specialties.includes(svc.name));
+        if (match) return go(match.id, match.category);
+      }
+      if (results.categories[0]) {
+        onOpenChange(false);
+        return navigate(results.categories[0].path);
+      }
     }
   };
 
