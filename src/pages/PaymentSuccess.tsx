@@ -14,6 +14,8 @@ function ConfettiBg() {
   );
 }
 
+import { getApiBase } from "@/lib/api";
+
 export default function PaymentSuccess() {
   const usr = (history.state as any)?.usr || {};
   const txn = { id: (usr.orderId || ("TXN" + Math.random().toString(36).slice(2,8).toUpperCase())), amount: (usr.total ?? 0), method: (usr.gateway ?? 'razorpay'), date: new Date().toLocaleString(), split: usr.split, status: usr.status || 'created' };
@@ -52,7 +54,12 @@ export default function PaymentSuccess() {
               </Card>
             )}
 
-            <Button className="rounded-xl">Go to Dashboard</Button>
+            <div className="flex gap-2 justify-center">
+              <Button className="rounded-xl">Go to Dashboard</Button>
+              {usr.paymentId && (
+                <a href={`${getApiBase()}/invoice?paymentId=${usr.paymentId}`} target="_blank" rel="noopener" className="inline-flex items-center px-4 py-2 rounded-xl border">Download Invoice</a>
+              )}
+            </div>
             <div className="text-xs text-muted-foreground">Need help? Contact Support</div>
           </div>
         </div>

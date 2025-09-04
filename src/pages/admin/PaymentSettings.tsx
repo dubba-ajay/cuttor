@@ -6,7 +6,87 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+function DbCommissionRules() {
+  const [adminKey, setAdminKey] = useState<string>(() => {
+    try { return localStorage.getItem('adminKey') || ''; } catch { return ''; }
+  });
+  const [list, setList] = useState<any[]>([]);
+  const [form, setForm] = useState({ scopeType: 'global', scopeId: '', storePct: 80, freelancerPct: 10, platformPct: 10, priority: 0, active: true });
+  const apiBase = (import.meta as any).env?.VITE_API_BASE || '/.netlify/functions';
+  const headers = (k?: string) => k ? { 'x-admin-key': k } : {};
+  const load = async () => {
+    const res = await fetch(`${apiBase}/adminRules`, { headers: headers(adminKey) as any });
+    if (!res.ok) throw new Error(await res.text());
+    setList(await res.json());
+  };
+  useEffect(() => { if (adminKey) { try { localStorage.setItem('adminKey', adminKey); } catch {} } }, [adminKey]);
+  useEffect(() => { if (adminKey) load().catch(()=>{}); }, [adminKey]);
+  const create = async () => {
+    const res = await fetch(`${apiBase}/adminRules`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(headers(adminKey) as any) }, body: JSON.stringify({ ...form, scopeId: form.scopeId || null }) });
+    if (!res.ok) { alert(await res.text()); return; }
+    setForm({ scopeType: 'global', scopeId: '', storePct: 80, freelancerPct: 10, platformPct: 10, priority: 0, active: true });
+    await load();
+  };
+  const toggle = async (id: string, active: boolean) => {
+    const row = list.find(r => r.id === id);
+    const res = await fetch(`${apiBase}/adminRules`, { method: 'PUT', headers: { 'Content-Type': 'application/json', ...(headers(adminKey) as any) }, body: JSON.stringify({ ...row, active }) });
+    if (!res.ok) { alert(await res.text()); return; }
+    await load();
+  };
+  const del = async (id: string) => {
+    const res = await fetch(`${apiBase}/adminRules?id=${id}`, { method: 'DELETE', headers: headers(adminKey) as any });
+    if (!res.ok) { alert(await res.text()); return; }
+    await load();
+  };
+  return (
+    <Card>
+      <CardHeader><CardTitle>Commission Rules (Database)</CardTitle></CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="grid gap-1"><Label>Admin API Key</Label><Input type="password" value={adminKey} onChange={e=> setAdminKey(e.target.value)} placeholder="Enter admin key" /></div>
+          <Button onClick={load} disabled={!adminKey}>Load</Button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 items-end">
+          <div className="grid gap-1">
+            <Label>Scope</Label>
+            <select className="border rounded px-3 py-2" value={form.scopeType} onChange={e=> setForm({ ...form, scopeType: e.target.value as any })}>
+              <option value="global">Global</option>
+              <option value="store">Store</option>
+              <option value="service">Service</option>
+              <option value="freelancer">Freelancer</option>
+            </select>
+          </div>
+          <div className="grid gap-1"><Label>Scope ID</Label><Input value={form.scopeId} onChange={e=> setForm({ ...form, scopeId: e.target.value })} placeholder="optional" /></div>
+          <div className="grid gap-1"><Label>Store %</Label><Input type="number" value={form.storePct} onChange={e=> setForm({ ...form, storePct: Number(e.target.value) })} /></div>
+          <div className="grid gap-1"><Label>Freelancer %</Label><Input type="number" value={form.freelancerPct} onChange={e=> setForm({ ...form, freelancerPct: Number(e.target.value) })} /></div>
+          <div className="grid gap-1"><Label>Platform %</Label><Input type="number" value={form.platformPct} onChange={e=> setForm({ ...form, platformPct: Number(e.target.value) })} /></div>
+          <div className="grid gap-1"><Label>Priority</Label><Input type="number" value={form.priority} onChange={e=> setForm({ ...form, priority: Number(e.target.value) })} /></div>
+          <div className="grid gap-1 md:col-span-6"><Button onClick={create} disabled={!adminKey}>Add Rule</Button></div>
+        </div>
+        <div className="border rounded">
+          <div className="grid grid-cols-6 gap-2 p-2 text-xs font-medium text-muted-foreground">
+            <div>Scope</div><div>Scope ID</div><div>Store%</div><div>Free%</div><div>Plat%</div><div>Actions</div>
+          </div>
+          {list.map((r) => (
+            <div key={r.id} className="grid grid-cols-6 gap-2 p-2 text-sm items-center border-t">
+              <div>{r.scopeType}</div>
+              <div>{r.scopeId || '-'}</div>
+              <div>{r.storePct}</div>
+              <div>{r.freelancerPct}</div>
+              <div>{r.platformPct}</div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={()=> toggle(r.id, !r.active)}>{r.active? 'Disable':'Enable'}</Button>
+                <Button size="sm" variant="destructive" onClick={()=> del(r.id)}>Delete</Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 function PerServiceSplitEditor() {
   const { settings, setSettings } = usePayments();
@@ -147,6 +227,8 @@ export default function AdminPaymentSettings() {
               <PerServiceSplitEditor />
             </CardContent>
           </Card>
+
+          <DbCommissionRules />
 
           <Card>
             <CardHeader><CardTitle>Freelancer & Store Linking</CardTitle></CardHeader>

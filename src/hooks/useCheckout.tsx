@@ -18,7 +18,7 @@ export default function useCheckout() {
           const data = await res.json();
           const e = createEscrow({ bookingId, storeId: 's1', freelancerId: 'freelancer-1', amount, method: settings.gateway, serviceId: 'svc1' });
           const parts = calculateSplit(amount, 'svc1');
-          navigate('/payment/success', { state: { bookingId, total: e.total, split: parts, gateway: settings.gateway, orderId: data.orderId || data.paymentIntentId, status: 'created' } });
+          navigate('/payment/success', { state: { bookingId, total: e.total, split: parts, gateway: settings.gateway, orderId: data.orderId || data.paymentIntentId, paymentId: data.paymentId, status: 'created' } });
           return;
         }
         const order = settings.gateway === 'razorpay'
