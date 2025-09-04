@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import { useMarketplace } from "@/contexts/MarketplaceContext";
+import { usePayments } from "@/contexts/PaymentContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +38,9 @@ const FreelancerDashboard = () => {
     openJobs, myJobs, earnings,
     todaysEarnings,
     applyToJob, startJob, completeJob, requestPayout,
+    freelancerId,
   } = useMarketplace();
+  const { link, linkFreelancer } = usePayments();
 
   const [profile, setProfile] = useLocalStorage("freelancerProfile", { name: "", role: "Hair Stylist", storeName: "", rating: 0 });
   const [assignedServices] = useLocalStorage("freelancerServices", [
@@ -382,7 +385,25 @@ const FreelancerDashboard = () => {
                       }}>Update</Button>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="grid gap-2">
+                    <Label>Store Linking</Label>
+                    <div className="text-sm text-muted-foreground">Request link to a store to enable payouts. Owner must approve.</div>
+                    <div className="flex gap-2 items-end">
+                      <div className="grid gap-1 w-full md:max-w-xs">
+                        <Label>Store ID</Label>
+                        <Input id="freelancer-store-id" placeholder="e.g., s1" />
+                      </div>
+                      <Button onClick={() => {
+                        const storeId = (document.getElementById('freelancer-store-id') as HTMLInputElement | null)?.value.trim();
+                        if (!storeId) { alert('Enter Store ID'); return; }
+                        linkFreelancer(freelancerId, storeId);
+                        alert('Link request sent');
+                      }}>Request Link</Button>
+                    </div>
+                    <div className="text-xs">Current: {link[freelancerId]?.storeId ? `${link[freelancerId]?.storeId} • ${link[freelancerId]?.approved ? 'Approved' : 'Pending'}` : 'Not linked'}</div>
+                  </div>
+
+                  <div className="flex gap-2 mt-2">
                     <Button variant="outline" onClick={() => signOut()}>Logout</Button>
                     <Button variant="destructive" onClick={()=> setReportOpen(true)}>Report Problem</Button>
                   </div>
