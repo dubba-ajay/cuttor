@@ -7,9 +7,59 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useMarketplace } from "@/contexts/MarketplaceContext";
+
+function PerServiceSplitEditor() {
+  const { settings, setSettings } = usePayments();
+  const [rows, setRows] = useState(Object.entries(settings.perServiceSplit).map(([serviceId, rule]) => ({ serviceId, ...rule })));
+  const addRow = () => setRows(prev => ([...prev, { serviceId: "", storePct: 0, freelancerPct: 0, platformPct: 0 }]));
+  const updateRow = (i: number, next: Partial<{ serviceId: string; storePct: number; freelancerPct: number; platformPct: number }>) => {
+    setRows(prev => prev.map((r, idx) => idx === i ? { ...r, ...next } : r));
+  };
+  const removeRow = (i: number) => setRows(prev => prev.filter((_, idx) => idx !== i));
+  const save = () => {
+    const map: Record<string, { storePct: number; freelancerPct: number; platformPct: number }> = {};
+    for (const r of rows) {
+      const sum = Math.round(r.storePct + r.freelancerPct + r.platformPct);
+      if (!r.serviceId) throw new Error("Service ID is required");
+      if (sum !== 100) throw new Error(`Split for ${r.serviceId} must total 100%`);
+      map[r.serviceId] = { storePct: r.storePct, freelancerPct: r.freelancerPct, platformPct: r.platformPct };
+    }
+    setSettings({ perServiceSplit: map });
+    alert("Per-service splits saved");
+  };
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-5 gap-2 text-xs font-medium text-muted-foreground">
+        <div>Service ID</div>
+        <div>Store %</div>
+        <div>Freelancer %</div>
+        <div>Platform %</div>
+        <div></div>
+      </div>
+      {rows.map((r, i) => {
+        const sum = Math.round(r.storePct + r.freelancerPct + r.platformPct);
+        return (
+          <div key={i} className="grid grid-cols-5 gap-2 items-center">
+            <Input value={r.serviceId} onChange={(e)=> updateRow(i, { serviceId: e.target.value })} placeholder="e.g., svc1" />
+            <Input type="number" value={r.storePct} onChange={(e)=> updateRow(i, { storePct: Number(e.target.value) })} />
+            <Input type="number" value={r.freelancerPct} onChange={(e)=> updateRow(i, { freelancerPct: Number(e.target.value) })} />
+            <Input type="number" value={r.platformPct} onChange={(e)=> updateRow(i, { platformPct: Number(e.target.value) })} />
+            <div className={`text-xs ${sum===100?'text-green-600':'text-red-600'}`}>{sum}% <button className="ml-2 text-red-600" onClick={()=> removeRow(i)}>Remove</button></div>
+          </div>
+        );
+      })}
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={addRow}>Add Service</Button>
+        <Button onClick={save}>Save Overrides</Button>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminPaymentSettings() {
   const { settings, setSettings, hasRazorpayEnv, hasStripeEnv } = usePayments();
+  const { ownerStoreId } = useMarketplace();
   const [business, setBusiness] = useState(settings.business);
   const [split, setSplit] = useState(settings.defaultSplit);
 
@@ -89,6 +139,14 @@ export default function AdminPaymentSettings() {
                 <Button disabled={sum!==100} onClick={()=> setSettings({ defaultSplit: split })}>Save Split</Button>
               </div>
               <div className="text-xs text-muted-foreground md:col-span-4">You can override per-service split on the booking screen.</div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>Per-service Split Overrides</CardTitle></CardHeader>
+            <CardContent className="space-y-3">
+              <div className="text-sm text-muted-foreground">Define service-specific splits. These override the default split when a booking references the matching service ID.</div>
+              <PerServiceSplitEditor />
             </CardContent>
           </Card>
 
