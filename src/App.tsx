@@ -30,6 +30,8 @@ import Transactions from "./pages/Transactions";
 import AdminTransactions from "./pages/AdminTransactions";
 import Subscription from "./pages/Subscription";
 import RefundStatus from "./pages/RefundStatus";
+import AdminPaymentSettings from "./pages/admin/PaymentSettings";
+import EscrowDashboard from "./pages/admin/EscrowDashboard";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ const App = () => (
             <Route path="/payment/failed" element={<PaymentFailed />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/admin/transactions" element={<RequireRole role="owner"><AdminTransactions /></RequireRole>} />
+            <Route path="/admin/payment-settings" element={<RequireRole role="owner"><AdminPaymentSettings /></RequireRole>} />
+            <Route path="/admin/escrow" element={<RequireRole role="owner"><EscrowDashboard /></RequireRole>} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/refund-status" element={<RefundStatus />} />
             <Route path="/contact" element={<Contact />} />
