@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Calendar, User } from "lucide-react";
+import { Menu, X, Calendar, User, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AuthDialog from "@/components/auth/AuthDialog";
 import { useAuth } from "@/contexts/AuthContext";
@@ -52,6 +52,9 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
+            <Link to="/nearby" aria-label="Search" className="p-2 rounded-full hover:bg-white/10 text-white">
+              <Search className="w-5 h-5" />
+            </Link>
             {!user ? (
               <>
                 <button onClick={() => setAuthOpen(true)} className="flex items-center gap-2 text-sm text-white/90 hover:text-[#EAB308] transition-colors">
@@ -86,13 +89,18 @@ const Header = () => {
             )}
           </div>
 
-          <button
-            className="md:hidden p-2 text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <Link to="/nearby" aria-label="Search" className="p-2 text-white">
+              <Search className="w-6 h-6" />
+            </Link>
+            <button
+              className="p-2 text-white"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {isMenuOpen && (
