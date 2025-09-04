@@ -8,6 +8,9 @@ const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || process.env.VITE_STRIPE_S
 
 const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method Not Allowed" };
+  const adminKey = process.env.ADMIN_API_KEY || process.env.VITE_ADMIN_API_KEY;
+  const provided = event.headers["x-admin-key"] || event.headers["X-Admin-Key"];
+  if (!adminKey || provided !== adminKey) return { statusCode: 401, body: "unauthorized" } as any;
   try {
     const { paymentId, amount, reason } = JSON.parse(event.body || "{}");
     if (!paymentId || !amount) return { statusCode: 400, body: "paymentId and amount required" };
