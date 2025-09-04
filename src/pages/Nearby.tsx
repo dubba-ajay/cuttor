@@ -43,9 +43,6 @@ export default function Nearby() {
             </div>
           </div>
 
-          <div className="pt-2">
-            <LocationBasedStores />
-          </div>
         </div>
       </main>
       <Footer />
