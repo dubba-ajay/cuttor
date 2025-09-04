@@ -4,6 +4,7 @@ import CategoryHeroSlider from "@/components/features/CategoryHeroSlider";
 // removed ServiceCategories for modern layout
 import TopRatedHeroStores from "@/components/features/TopRatedHeroStores";
 import MensStoresModern from "@/components/features/MensStoresModern";
+import MobileSearchBar from "@/components/features/MobileSearchBar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
