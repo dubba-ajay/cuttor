@@ -114,7 +114,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden sm:max-w-none top-16 left-0 right-0 translate-x-0 translate-y-0 w-full rounded-none border-b shadow" aria-label="Search dialog">
+      <DialogContent className="p-0 overflow-hidden sm:max-w-2xl" aria-label="Search dialog">
         <DialogHeader className="sr-only">
           <DialogTitle>Search</DialogTitle>
         </DialogHeader>
