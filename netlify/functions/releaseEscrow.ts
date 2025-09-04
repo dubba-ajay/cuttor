@@ -4,6 +4,9 @@ import { calculateSplit } from "../../src/server/split";
 
 const handler: Handler = async (event) => {
   if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method Not Allowed" };
+  const adminKey = process.env.ADMIN_API_KEY || process.env.VITE_ADMIN_API_KEY;
+  const provided = event.headers["x-admin-key"] || event.headers["X-Admin-Key"];
+  if (!adminKey || provided !== adminKey) return { statusCode: 401, body: "unauthorized" } as any;
   try {
     const { paymentId } = JSON.parse(event.body || "{}");
     if (!paymentId) return { statusCode: 400, body: "paymentId required" };
