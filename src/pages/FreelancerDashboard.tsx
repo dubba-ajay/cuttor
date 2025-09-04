@@ -1,6 +1,5 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import { useMarketplace } from "@/contexts/MarketplaceContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
