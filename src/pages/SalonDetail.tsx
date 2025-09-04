@@ -1,6 +1,5 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import Header from "@/components/layout/Header";
 import { useParams, Link } from "react-router-dom";
 import { allStores } from "@/components/features/AllStores";
 import { Badge } from "@/components/ui/badge";
