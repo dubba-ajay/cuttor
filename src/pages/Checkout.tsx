@@ -24,6 +24,7 @@ function ProgressBar() {
 import useCheckout from "@/hooks/useCheckout";
 
 export default function Checkout() {
+  useCheckout();
   const item = {
     id: 1,
     name: "Premium Haircut Package",
