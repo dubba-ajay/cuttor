@@ -15,7 +15,7 @@ function ConfettiBg() {
 }
 
 export default function PaymentSuccess() {
-  const txn = { id: "TXN123456", amount: 1799, method: "Card (Visa)", date: new Date().toLocaleString() };
+  const txn = { id: "TXN" + Math.random().toString(36).slice(2,8).toUpperCase(), amount: (history.state?.usr?.total ?? 0), method: (history.state?.usr?.gateway ?? 'razorpay'), date: new Date().toLocaleString(), split: history.state?.usr?.split };
   return (
     <div className="relative min-h-screen flex flex-col bg-white">
       <Header />
