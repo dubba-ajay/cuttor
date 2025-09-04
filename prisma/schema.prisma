@@ -1,0 +1,110 @@
+// Prisma schema for Neon Postgres
+// Set DATABASE_URL in environment variables
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id             String   @id @default(cuid())
+  type           String   // 'store' | 'freelancer'
+  ownerEmail     String
+  gateway        String   // 'razorpay' | 'stripe'
+  gatewayAccount String?  // sub-account / connected account id
+  kycStatus      String   @default("pending")
+  bankIfsc       String?
+  bankAccount    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  payouts        Payout[]
+}
+
+model CommissionRule {
+  id            String   @id @default(cuid())
+  scopeType     String   // 'global' | 'store' | 'service' | 'freelancer'
+  scopeId       String?  // null for global
+  storePct      Int
+  freelancerPct Int
+  platformPct   Int
+  priority      Int      // higher wins when multiple match
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+}
+
+model Payment {
+  id           String   @id @default(cuid())
+  bookingId    String
+  storeId      String
+  freelancerId String?
+  amount       Int      // in currency base (e.g., INR rupees)
+  tax          Int
+  total        Int
+  currency     String
+  gateway      String
+  gatewayRef   String?  // order id / payment intent id
+  status       String   // 'created' | 'authorized' | 'captured' | 'failed' | 'refunded'
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  escrow       Escrow?
+  payouts      Payout[]
+  refunds      Refund[]
+  invoice      Invoice?
+}
+
+model Escrow {
+  id         String   @id @default(cuid())
+  paymentId  String   @unique
+  status     String   // 'pending' | 'released' | 'refunded' | 'partial_refunded'
+  createdAt  DateTime @default(now())
+  Payment    Payment  @relation(fields: [paymentId], references: [id])
+}
+
+model Payout {
+  id           String   @id @default(cuid())
+  paymentId    String
+  payeeType    String   // 'store' | 'freelancer' | 'platform'
+  payeeAccount String?  // Account.id
+  amount       Int
+  status       String   // 'pending' | 'paid' | 'failed'
+  gatewayRef   String?
+  date         DateTime @default(now())
+  Payment      Payment  @relation(fields: [paymentId], references: [id])
+  Account      Account? @relation(fields: [payeeAccount], references: [id])
+}
+
+model Refund {
+  id         String   @id @default(cuid())
+  paymentId  String
+  amount     Int
+  reason     String?
+  status     String   // 'succeeded' | 'failed'
+  gatewayRef String?
+  date       DateTime @default(now())
+  Payment    Payment  @relation(fields: [paymentId], references: [id])
+}
+
+model WebhookLog {
+  id         String   @id @default(cuid())
+  gateway    String
+  event      String
+  signature  String?
+  valid      Boolean
+  payload    Json
+  createdAt  DateTime @default(now())
+}
+
+model Invoice {
+  id         String   @id @default(cuid())
+  paymentId  String   @unique
+  pdfUrl     String?
+  data       Json
+  createdAt  DateTime @default(now())
+  Payment    Payment  @relation(fields: [paymentId], references: [id])
+}
