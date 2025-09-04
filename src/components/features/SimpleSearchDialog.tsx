@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,9 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 overflow-hidden sm:max-w-2xl" aria-label="Search dialog">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Search</DialogTitle>
+        </DialogHeader>
         <div className="p-4 border-b bg-white">
           {/* Booksy-style stacked fields on mobile */}
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
