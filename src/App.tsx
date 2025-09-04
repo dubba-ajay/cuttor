@@ -7,6 +7,7 @@ import { LocationProvider } from "@/contexts/LocationContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { RequireAuth, RequireRole } from "@/components/auth/RequireAuth";
 import { MarketplaceProvider } from "@/contexts/MarketplaceContext";
+import { PaymentProvider } from "@/contexts/PaymentContext";
 import Index from "./pages/Index";
 import MensHair from "./pages/MensHair";
 import WomensBeauty from "./pages/WomensBeauty";
@@ -38,6 +39,7 @@ const App = () => (
       <LocationProvider>
         <AuthProvider>
           <MarketplaceProvider>
+            <PaymentProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -70,6 +72,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+            </PaymentProvider>
             </MarketplaceProvider>
           </AuthProvider>
       </LocationProvider>
