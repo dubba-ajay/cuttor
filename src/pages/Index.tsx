@@ -4,6 +4,7 @@ import CategoryHeroSlider from "@/components/features/CategoryHeroSlider";
 // removed ServiceCategories for modern layout
 import TopRatedHeroStores from "@/components/features/TopRatedHeroStores";
 import MensStoresModern from "@/components/features/MensStoresModern";
+import MobileSearchBar from "@/components/features/MobileSearchBar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -29,6 +30,9 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="pt-16 space-y-10">
+        <div className="container mx-auto px-4 lg:px-6">
+          <MobileSearchBar />
+        </div>
         <CategoryHeroSlider category="mens-hair" showTabs={true} />
         <TopRatedHeroStores />
         <MensStoresModern category="all" />
