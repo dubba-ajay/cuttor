@@ -37,7 +37,7 @@ const Header = () => {
             <span className="text-xl font-bold tracking-tight text-white">BeautySalon</span>
           </Link>
 
-          <nav className="flex items-center space-x-4 md:space-x-6 overflow-x-auto whitespace-nowrap">
+          <nav className="flex items-center space-x-4 md:space-x-6 overflow-x-auto no-scrollbar whitespace-nowrap">
             {navItems.map((item) => {
               const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
               return (
