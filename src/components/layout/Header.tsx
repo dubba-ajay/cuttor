@@ -34,7 +34,6 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
             <Calendar className="w-6 h-6 text-white" />
-            <span className="text-xl font-bold tracking-tight text-white">BeautySalon</span>
           </Link>
 
           <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
