@@ -129,49 +129,50 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden sm:max-w-2xl left-0 top-0 translate-x-0 translate-y-0 w-full rounded-none sm:left-1/2 sm:top-1/2 sm:translate-x-[-50%] sm:translate-y-[-50%]" aria-label="Search dialog">
+      <DialogContent className="p-0 overflow-hidden left-0 top-0 translate-x-0 translate-y-0 w-full rounded-none sm:max-w-none" aria-label="Search dialog">
         <DialogHeader className="sr-only">
           <DialogTitle>Search</DialogTitle>
         </DialogHeader>
-        <div className="p-4 border-b bg-white">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              autoFocus
-              placeholder="Search services, stores, or categories"
-              value={query}
-              onChange={(e)=> setQuery(e.target.value)}
-              onKeyDown={submitFirst}
-              className="pl-9 rounded-full shadow"
-            />
+        <div className="bg-white border-b">
+          <div className="container mx-auto px-4 lg:px-6 py-3">
+            <div className="relative max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                autoFocus
+                placeholder="Search services, stores, or categories"
+                value={query}
+                onChange={(e)=> setQuery(e.target.value)}
+                onKeyDown={submitFirst}
+                className="pl-9 rounded-full shadow h-10 text-sm md:h-12 md:text-base lg:h-14 lg:text-lg"
+              />
+              {query && (
+                <button aria-label="Clear" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
+              )}
+            </div>
             {query && (
-              <button aria-label="Clear" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
+              <div className="mt-2 flex flex-wrap gap-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+                {presetCategories.map(p => (
+                  <button key={p.label} onClick={()=> setQuery(p.q)} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50">
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {query && location?.city && (
+              <div className="mt-2 text-xs text-muted-foreground max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">Results near <span className="font-medium">{location.city}</span></div>
             )}
           </div>
-          {query && (
-            <div className="mt-2 flex flex-wrap gap-2">
-              {presetCategories.map(p => (
-                <button key={p.label} onClick={()=> setQuery(p.q)} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50">
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          )}
-          {query && location?.city && (
-            <div className="mt-2 text-xs text-muted-foreground">Results near <span className="font-medium">{location.city}</span></div>
-          )}
         </div>
 
         {/* Results */}
-        <div className="max-h-96 overflow-auto">
-          {/* Only show results after typing */}
+        <div className="max-h-[70vh] overflow-auto">
           {query && (
-            <>
+            <div className="container mx-auto px-4 lg:px-6">
               {results.categories.length > 0 && (
-                <div className="py-2">
-                  <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Categories</div>
+                <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+                  <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Categories</div>
                   {results.categories.map(c => (
-                    <button key={c.key} className="w-full text-left px-4 py-2 hover:bg-accent/50" onClick={()=> { onOpenChange(false); navigate(c.path); }}>
+                    <button key={c.key} className="w-full text-left px-4 py-2 hover:bg-accent/50 rounded-md" onClick={()=> { onOpenChange(false); navigate(c.path); }}>
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{c.label}</div>
                         <Badge variant="outline">Open</Badge>
@@ -182,10 +183,10 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
               )}
 
               {results.services.length > 0 && (
-                <div className="py-2">
-                  <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Services</div>
+                <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+                  <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Services</div>
                   {results.services.map(svc => (
-                    <button key={svc.name} className="w-full text-left px-4 py-2 hover:bg-accent/50" onClick={()=> {
+                    <button key={svc.name} className="w-full text-left px-4 py-2 hover:bg-accent/50 rounded-md" onClick={()=> {
                       const match = allStores.find(s => s.category === svc.category && s.specialties.includes(svc.name));
                       if (match) go(match.id, match.category);
                     }}>
@@ -199,10 +200,10 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
               )}
 
               {results.stores.length > 0 && (
-                <div className="py-2">
-                  <div className="px-4 pb-1 text-xs font-semibold text-muted-foreground">Stores</div>
+                <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+                  <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Stores</div>
                   {results.stores.map(s => (
-                    <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50" onClick={()=> go(s.id, s.category)}>
+                    <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50 rounded-md" onClick={()=> go(s.id, s.category)}>
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <div className="font-medium truncate">{s.name}</div>
@@ -222,9 +223,9 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
               )}
 
               {results.categories.length + results.services.length + results.stores.length === 0 && (
-                <div className="p-4 text-sm text-muted-foreground">No results found.</div>
+                <div className="p-4 text-sm text-muted-foreground max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">No results found.</div>
               )}
-            </>
+            </div>
           )}
         </div>
       </DialogContent>
