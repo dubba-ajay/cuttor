@@ -29,7 +29,7 @@ const Header = () => {
   const dashboardPath = role === "owner" ? "/store-owner-dashboard" : role === "freelancer" ? "/freelancer-dashboard" : "/user-dashboard";
 
   return (
-    <header className="sticky top-0 left-0 right-0 z-[60] bg-[#1E293B] text-white">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-[#1E293B] text-white shadow-md">
       <div className="container mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2">
