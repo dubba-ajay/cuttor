@@ -36,9 +36,9 @@ const Header = () => {
             <Calendar className="w-6 h-6 text-white" />
           </Link>
 
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none flex-1 min-w-0 pointer-events-none">
-            <div className="overflow-x-auto no-scrollbar pointer-events-auto px-3 sm:px-4">
-              <nav className="flex items-center justify-center space-x-5 md:space-x-6 whitespace-nowrap">
+          <div className="flex-1 min-w-0 pointer-events-none md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+            <div className="overflow-x-auto md:no-scrollbar pointer-events-auto px-3 sm:px-4">
+              <nav className="flex items-center justify-start md:justify-center space-x-5 md:space-x-6 whitespace-nowrap">
                 {navItems.map((item) => {
                   const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
                   return (
