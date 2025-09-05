@@ -185,6 +185,29 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
         <div className="max-h-[70vh] overflow-auto">
           {query && (
             <div className="container mx-auto px-4 lg:px-6">
+              {results.stores.length > 0 && (
+                <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+                  <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Stores</div>
+                  {results.stores.map(s => (
+                    <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50 rounded-md" onClick={()=> go(s.id, s.category)}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="font-medium truncate">{s.name}</div>
+                          <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />{s.rating} ({s.reviews})</span>
+                            <span>•</span>
+                            <span>{categoryLabel(s.category)}</span>
+                            <span>•</span>
+                            <span>{s.address}</span>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="whitespace-nowrap">View</Badge>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {results.categories.length > 0 && (
                 <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
                   <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Categories</div>
@@ -210,29 +233,6 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{svc.name}</div>
                         <Badge variant="outline">{categoryLabel(svc.category)}</Badge>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {results.stores.length > 0 && (
-                <div className="py-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
-                  <div className="px-0 pb-1 text-xs font-semibold text-muted-foreground">Stores</div>
-                  {results.stores.map(s => (
-                    <button key={s.id} className="w-full text-left px-4 py-3 hover:bg-accent/50 rounded-md" onClick={()=> go(s.id, s.category)}>
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">{s.name}</div>
-                          <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />{s.rating} ({s.reviews})</span>
-                            <span>•</span>
-                            <span>{categoryLabel(s.category)}</span>
-                            <span>•</span>
-                            <span>{s.address}</span>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="whitespace-nowrap">View</Badge>
                       </div>
                     </button>
                   ))}
