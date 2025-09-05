@@ -37,21 +37,23 @@ const Header = () => {
             <span className="text-xl font-bold tracking-tight text-white">BeautySalon</span>
           </Link>
 
-          <nav className="flex items-center space-x-4 md:space-x-6 overflow-x-auto no-scrollbar whitespace-nowrap">
-            {navItems.map((item) => {
-              const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  state={item.href === "/" ? { allowHome: true } : undefined}
-                  className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="overflow-x-auto no-scrollbar">
+            <nav className="flex items-center space-x-4 md:space-x-6 whitespace-nowrap min-w-max">
+              {navItems.map((item) => {
+                const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    state={item.href === "/" ? { allowHome: true } : undefined}
+                    className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
           <div className="hidden md:flex items-center space-x-4">
             <button aria-label="Search" className="p-2 rounded-full hover:bg-white/10 text-white" onClick={()=> setSearchOpen(true)}>
