@@ -64,15 +64,32 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
 
     const inferredCategory = categoryFromQuery(q);
 
-    const stores = allStores
-      .filter(s => (
-        s.name.toLowerCase().includes(q) ||
-        s.address.toLowerCase().includes(q) ||
-        s.description.toLowerCase().includes(q) ||
-        s.specialties.some(x => x.toLowerCase().includes(q)) ||
-        (inferredCategory ? s.category === inferredCategory : false)
-      ))
-      .filter(s => (city ? s.address.toLowerCase().includes(city) : true));
+    // base store matches
+    const baseStores = allStores.filter(s => (
+      s.name.toLowerCase().includes(q) ||
+      s.address.toLowerCase().includes(q) ||
+      s.description.toLowerCase().includes(q) ||
+      s.specialties.some(x => x.toLowerCase().includes(q)) ||
+      (inferredCategory ? s.category === inferredCategory : false)
+    ));
+
+    // apply city filter if it yields any results; otherwise fall back
+    const cityFiltered = city ? baseStores.filter(s => s.address.toLowerCase().includes(city)) : baseStores;
+    const chosenStores = city && cityFiltered.length > 0 ? cityFiltered : baseStores;
+
+    // score and sort stores to prioritize exact name matches
+    const score = (s: typeof allStores[number]) => {
+      const name = s.name.toLowerCase();
+      let sc = 0;
+      if (name === q) sc += 100;
+      if (name.startsWith(q)) sc += 80;
+      if (name.includes(q)) sc += 60;
+      if (s.specialties.some(x => x.toLowerCase().includes(q))) sc += 40;
+      if (s.description.toLowerCase().includes(q) || s.address.toLowerCase().includes(q)) sc += 20;
+      if (inferredCategory && s.category === inferredCategory) sc += 10;
+      return sc;
+    };
+    const stores = chosenStores.sort((a, b) => score(b) - score(a));
 
     const categoryDefs = [
       { key: "mens-hair", label: "Men's Hair", path: "/mens-hair" },
