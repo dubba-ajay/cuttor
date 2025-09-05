@@ -6,12 +6,14 @@ import AuthDialog from "@/components/auth/AuthDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SimpleSearchDialog from "@/components/features/SimpleSearchDialog";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, role, signOut } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -52,9 +54,9 @@ const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <span className="p-2 rounded-full text-white/80">
+            <button aria-label="Search" className="p-2 rounded-full hover:bg-white/10 text-white" onClick={()=> setSearchOpen(true)}>
               <Search className="w-5 h-5" />
-            </span>
+            </button>
             {!user ? (
               <>
                 <button onClick={() => setAuthOpen(true)} className="flex items-center gap-2 text-sm text-white/90 hover:text-[#EAB308] transition-colors">
@@ -90,9 +92,9 @@ const Header = () => {
           </div>
 
           <div className="md:hidden flex items-center gap-1">
-            <span className="p-2 text-white/80">
+            <button aria-label="Search" className="p-2 text-white" onClick={()=> setSearchOpen(true)}>
               <Search className="w-6 h-6" />
-            </span>
+            </button>
             <button
               className="p-2 text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -141,6 +143,7 @@ const Header = () => {
           </div>
         )}
       </div>
+      <SimpleSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 };
