@@ -143,7 +143,6 @@ const Header = () => {
           </div>
         )}
       </div>
-      <SimpleSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 };
