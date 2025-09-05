@@ -4,7 +4,6 @@ import { allStores } from "./AllStores";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { MapPin, Search, Navigation, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -96,35 +95,6 @@ export default function MobileSearchBar(){
         )}
       </div>
 
-      {/* Top results list */}
-      <div className="mt-4 space-y-2">
-        {results.slice(0,5).map(r => (
-          <Card key={`card-${r.id}`} className="p-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-sm font-semibold">{r.name}</div>
-                <div className="text-xs text-muted-foreground">{r.address}</div>
-                <div className="mt-1 flex items-center gap-2 text-xs">
-                  <Badge variant={r.openNow? 'default':'secondary'} className={r.openNow? '' : ''}>{r.openNow? 'Available' : 'Closed'}</Badge>
-                  <span>{r.km.toFixed(1)} km</span>
-                  <span>• {r.etaMin} min</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button asChild size="sm" className="rounded-full"><Link to={r.route}>Book</Link></Button>
-                <Button variant="outline" size="sm" className="rounded-full">Details</Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      {/* Quick manual location set */}
-      <div className="mt-3 text-xs text-muted-foreground">
-        Not in {location?.city || 'your area'}? <button className="underline" onClick={() => {
-          const c = prompt('Enter city (e.g., Mumbai)')?.trim(); if (c) setManualLocation(c);
-        }}>Change location</button>
-      </div>
     </div>
   );
 }
