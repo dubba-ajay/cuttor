@@ -29,7 +29,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="pt-16 space-y-10">
-        <CategoryHeroSlider category="mens-hair" showTabs={true} />
+        <CategoryHeroSlider category="mens-hair" showTabs={false} />
         <TopRatedHeroStores />
         <MensStoresModern category="all" />
       </main>
