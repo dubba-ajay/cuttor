@@ -18,15 +18,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-background border-t">
-      <div className="border-b">
-        <div className="container mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-center justify-center gap-6 text-sm">
-          <Link to="/" className="text-muted-foreground hover:text-foreground">Home</Link>
-          <Link to="/mens-hair" className="text-muted-foreground hover:text-foreground">Men's Hair</Link>
-          <Link to="/womens-beauty" className="text-muted-foreground hover:text-foreground">Women's Beauty</Link>
-          <Link to="/nail-studios" className="text-muted-foreground hover:text-foreground">Nail Studios</Link>
-          <Link to="/makeup-artists" className="text-muted-foreground hover:text-foreground">Makeup Artists</Link>
-        </div>
-      </div>
       <div className="container mx-auto px-4 lg:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">

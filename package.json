@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "dependencies": {
+  "dependencies": {"@prisma/client": "^5.17.0", "node-fetch": "^3.3.2", "pdfkit": "^0.13.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -62,7 +62,7 @@
     "vaul": "^0.9.3",
     "zod": "^3.23.8"
   },
-  "devDependencies": {
+  "devDependencies": {"prisma": "^5.17.0",
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.5.5",

@@ -18,6 +18,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { usePayments } from "@/contexts/PaymentContext";
 
 function useLocalStorage<T>(key: string, initial: T) {
   const [val, setVal] = useState<T>(() => {
@@ -37,6 +38,7 @@ type OwnerAppt = { id: string; date: string; time: string; customer: string; ser
 
 const StoreOwnerDashboard = () => {
   const { role, setRole, ownerStoreId, jobs, bookings, earnings } = useMarketplace();
+  const { link, approveFreelancer } = usePayments();
 
   const [profile, setProfile] = useLocalStorage("storeProfile", {
     name: "Elite Men's Grooming",
@@ -238,6 +240,26 @@ const StoreOwnerDashboard = () => {
           </TabsContent>
 
           <TabsContent value="staff">
+            <Card className="mb-4">
+              <CardHeader><CardTitle>Freelancer Linking Requests</CardTitle></CardHeader>
+              <CardContent className="space-y-2">
+                {Object.entries(link).filter(([fid, l]) => l.storeId === ownerStoreId).length === 0 && (
+                  <div className="text-sm text-muted-foreground">No requests for your store.</div>
+                )}
+                {Object.entries(link).filter(([fid, l]) => l.storeId === ownerStoreId).map(([fid, l]) => (
+                  <div key={fid} className="flex items-center justify-between border rounded-lg p-2 text-sm">
+                    <div>
+                      <div className="font-medium">Freelancer: {fid}</div>
+                      <div className="text-xs text-muted-foreground">Status: {l.approved ? 'Approved' : 'Pending'}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      {!l.approved && (<Button size="sm" onClick={() => approveFreelancer(fid, true)}>Approve</Button>)}
+                      {l.approved && (<Button size="sm" variant="outline" onClick={() => approveFreelancer(fid, false)}>Revoke</Button>)}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
             <div className="flex justify-between items-center">
               <div className="text-lg font-semibold">Staff Management</div>
               <Button onClick={()=> setNewStaffOpen(true)} className="rounded-full"><span className="mr-1">＋</span>Staff</Button>

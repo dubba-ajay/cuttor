@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Calendar, User } from "lucide-react";
+import { Menu, X, Calendar, User, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AuthDialog from "@/components/auth/AuthDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SimpleSearchDialog from "@/components/features/SimpleSearchDialog";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, role, signOut } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -27,31 +29,37 @@ const Header = () => {
   const dashboardPath = role === "owner" ? "/store-owner-dashboard" : role === "freelancer" ? "/freelancer-dashboard" : "/user-dashboard";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#1E293B] text-white">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-[#1E293B] text-white shadow-md">
       <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 relative">
           <Link to="/" className="flex items-center space-x-2">
             <Calendar className="w-6 h-6 text-white" />
-            <span className="text-xl font-bold tracking-tight text-white">BeautySalon</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => {
-              const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  state={item.href === "/" ? { allowHome: true } : undefined}
-                  className={`text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
-                >
-                  {item.name}
-                </Link>
-              );
-            })}
-          </nav>
+          <div className="block flex-1 min-w-0 pointer-events-none md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+            <div className="overflow-x-auto no-scrollbar pointer-events-auto px-3 sm:px-4">
+              <nav className="flex items-center justify-start md:justify-center space-x-5 md:space-x-6 whitespace-nowrap">
+                {navItems.map((item) => {
+                  const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      state={item.href === "/" ? { allowHome: true } : undefined}
+                      className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors hover:bg-white/10 ${active ? "font-semibold text-white" : "text-white/90"}`}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          </div>
 
           <div className="hidden md:flex items-center space-x-4">
+            <button aria-label="Search" className="p-2 rounded-full hover:bg-white/10 text-white" onClick={()=> setSearchOpen(true)}>
+              <Search className="w-5 h-5" />
+            </button>
             {!user ? (
               <>
                 <button onClick={() => setAuthOpen(true)} className="flex items-center gap-2 text-sm text-white/90 hover:text-[#EAB308] transition-colors">
@@ -86,13 +94,18 @@ const Header = () => {
             )}
           </div>
 
-          <button
-            className="md:hidden p-2 text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <button aria-label="Search" className="p-2 text-white" onClick={()=> setSearchOpen(true)}>
+              <Search className="w-6 h-6" />
+            </button>
+            <button
+              className="p-2 text-white"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {isMenuOpen && (
@@ -133,6 +146,7 @@ const Header = () => {
           </div>
         )}
       </div>
+      <SimpleSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 };
