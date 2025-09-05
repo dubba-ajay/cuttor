@@ -37,8 +37,8 @@ const Header = () => {
           </Link>
 
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none flex-1 min-w-0 pointer-events-none">
-            <div className="overflow-x-auto no-scrollbar pointer-events-auto">
-              <nav className="flex items-center justify-center space-x-4 md:space-x-6 whitespace-nowrap">
+            <div className="overflow-x-auto no-scrollbar pointer-events-auto px-3 sm:px-4">
+              <nav className="flex items-center justify-center space-x-5 md:space-x-6 whitespace-nowrap">
                 {navItems.map((item) => {
                   const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
                   return (
@@ -46,7 +46,7 @@ const Header = () => {
                       key={item.name}
                       to={item.href}
                       state={item.href === "/" ? { allowHome: true } : undefined}
-                      className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
+                      className={`px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors hover:bg-white/10 ${active ? "font-semibold text-white" : "text-white/90"}`}
                     >
                       {item.name}
                     </Link>
