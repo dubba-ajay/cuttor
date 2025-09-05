@@ -37,7 +37,7 @@ const Header = () => {
           </Link>
 
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none flex-1 min-w-0 pointer-events-none">
-            <div className="overflow-x-auto pointer-events-auto">
+            <div className="overflow-x-auto no-scrollbar pointer-events-auto">
               <nav className="flex items-center justify-center space-x-4 md:space-x-6 whitespace-nowrap">
                 {navItems.map((item) => {
                   const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
