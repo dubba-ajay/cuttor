@@ -114,16 +114,16 @@ const SalonDetail = () => {
                     <h3 className="font-semibold mb-2">Services</h3>
                     <div className="divide-y border rounded-lg">
                       {categoryServices.map(svc => (
-                        <div key={svc.id} className="flex items-center justify-between p-4">
-                          <div>
+                        <div key={svc.id} className="p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="min-w-0">
                             <div className="font-medium">{svc.name}</div>
-                            <div className="text-sm text-muted-foreground flex items-center gap-3">
+                            <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-2">
                               <span>{svc.duration}</span>
                               <span>•</span>
                               <span className="font-semibold">{svc.price}</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 sm:self-auto self-start">
                             <Button
                               onClick={() => { setSelectedService(svc); setIsBookingOpen(true); }}
                             >
