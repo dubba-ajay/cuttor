@@ -37,7 +37,7 @@ const Header = () => {
             <span className="text-xl font-bold tracking-tight text-white">BeautySalon</span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="flex items-center space-x-4 md:space-x-6 overflow-x-auto whitespace-nowrap">
             {navItems.map((item) => {
               const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
               return (
@@ -45,7 +45,7 @@ const Header = () => {
                   key={item.name}
                   to={item.href}
                   state={item.href === "/" ? { allowHome: true } : undefined}
-                  className={`text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
+                  className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
                 >
                   {item.name}
                 </Link>
