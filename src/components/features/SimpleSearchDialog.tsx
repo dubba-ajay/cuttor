@@ -136,7 +136,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
         <div className="bg-white border-b">
           <div className="px-4 lg:px-6 py-3">
             <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
               <Input
                 autoFocus
                 placeholder="Search services, stores, or categories"
