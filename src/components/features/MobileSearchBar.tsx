@@ -25,7 +25,6 @@ function deriveStoreCoords(idx:number, base:{lat:number;lng:number}){
 export default function MobileSearchBar(){
   const { location, requestLocation, setManualLocation, isLoading } = useLocation();
   const [q, setQ] = useState("");
-  const [openSuggest, setOpenSuggest] = useState(false);
 
   const base = useMemo(()=> ({ lat: location?.latitude || 28.6139, lng: location?.longitude || 77.209}), [location]);
 
@@ -57,14 +56,14 @@ export default function MobileSearchBar(){
         <div className="flex items-center gap-2">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input value={q} onChange={(e)=>{ setQ(e.target.value); setOpenSuggest(true); }} onFocus={()=> setOpenSuggest(true)} placeholder="Search stores, salons, or home services" className="pl-9 h-11 rounded-xl" />
+            <Input value={q} onChange={(e)=>{ setQ(e.target.value); }} placeholder="Search stores, salons, or home services" className="pl-9 h-11 rounded-xl" />
           </div>
           <Button variant="outline" size="sm" className="rounded-full" onClick={() => requestLocation()} disabled={isLoading}>
             <Navigation className="w-4 h-4 mr-1" /> GPS
           </Button>
         </div>
         <div className="mt-2 flex items-center justify-between">
-          <button className="text-sm inline-flex items-center gap-1 text-blue-600" onClick={() => setOpenSuggest(!openSuggest)}>
+          <button className="text-sm inline-flex items-center gap-1 text-blue-600">
             <MapPin className="w-4 h-4" /> {location?.city || 'Set location'}
           </button>
           <div className="flex gap-1 overflow-x-auto max-w-[60%]">
@@ -74,25 +73,6 @@ export default function MobileSearchBar(){
           </div>
         </div>
 
-        {openSuggest && (
-          <div className="mt-3 rounded-xl border bg-white divide-y max-h-80 overflow-auto">
-            {results.length === 0 && (
-              <div className="p-3 text-sm text-muted-foreground">No results. Try a different term.</div>
-            )}
-            {results.map(r => (
-              <Link to={r.route} key={r.id} className="flex items-center justify-between p-3 hover:bg-gray-50">
-                <div>
-                  <div className="text-sm font-medium">{r.name}</div>
-                  <div className="text-xs text-muted-foreground">{r.category.replace('-', ' ')} • {r.address}</div>
-                </div>
-                <div className="text-right text-xs">
-                  <div className="font-medium">{r.km.toFixed(1)} km</div>
-                  <div className="inline-flex items-center gap-1 text-muted-foreground"><Clock className="w-3 h-3" /> {r.etaMin} min</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
 
     </div>
