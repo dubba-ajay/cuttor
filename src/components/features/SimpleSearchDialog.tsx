@@ -134,23 +134,23 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
           <DialogTitle>Search</DialogTitle>
         </DialogHeader>
         <div className="bg-white border-b">
-          <div className="container mx-auto px-4 lg:px-6 py-3">
-            <div className="relative max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="px-4 lg:px-6 py-3">
+            <div className="relative w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 autoFocus
                 placeholder="Search services, stores, or categories"
                 value={query}
                 onChange={(e)=> setQuery(e.target.value)}
                 onKeyDown={submitFirst}
-                className="pl-9 rounded-full shadow h-10 text-sm md:h-12 md:text-base lg:h-14 lg:text-lg"
+                className="w-full pl-10 rounded-full shadow h-10 text-sm md:h-12 md:text-base lg:h-14 lg:text-lg border-2 border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-600"
               />
               {query && (
-                <button aria-label="Clear" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
+                <button aria-label="Clear" className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-600/80" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
               )}
             </div>
             {query && (
-              <div className="mt-2 flex flex-wrap gap-2 max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">
+              <div className="mt-2 flex flex-wrap gap-2">
                 {presetCategories.map(p => (
                   <button key={p.label} onClick={()=> setQuery(p.q)} className="px-3 py-1.5 text-xs rounded-full border bg-white hover:bg-gray-50">
                     {p.label}
@@ -159,7 +159,7 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
               </div>
             )}
             {query && location?.city && (
-              <div className="mt-2 text-xs text-muted-foreground max-w-screen-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto">Results near <span className="font-medium">{location.city}</span></div>
+              <div className="mt-2 text-xs text-muted-foreground">Results near <span className="font-medium">{location.city}</span></div>
             )}
           </div>
         </div>
