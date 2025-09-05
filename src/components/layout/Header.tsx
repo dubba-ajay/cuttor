@@ -31,27 +31,29 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-[#1E293B] text-white shadow-md">
       <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 relative">
           <Link to="/" className="flex items-center space-x-2">
             <Calendar className="w-6 h-6 text-white" />
           </Link>
 
-          <div className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
-            <nav className="flex items-center space-x-4 md:space-x-6 whitespace-nowrap min-w-max">
-              {navItems.map((item) => {
-                const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    state={item.href === "/" ? { allowHome: true } : undefined}
-                    className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </nav>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:static md:transform-none flex-1 min-w-0 pointer-events-none">
+            <div className="overflow-x-auto no-scrollbar pointer-events-auto">
+              <nav className="flex items-center justify-center space-x-4 md:space-x-6 whitespace-nowrap">
+                {navItems.map((item) => {
+                  const active = location.pathname === item.href || location.pathname.startsWith(item.href + "/");
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      state={item.href === "/" ? { allowHome: true } : undefined}
+                      className={`text-xs sm:text-sm font-medium transition-colors hover:text-[#3B82F6] hover:font-semibold ${active ? "font-semibold" : "text-white"}`}
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
