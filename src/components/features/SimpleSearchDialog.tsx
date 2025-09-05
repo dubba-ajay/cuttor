@@ -136,14 +136,14 @@ export default function SimpleSearchDialog({ open, onOpenChange }: Props) {
         <div className="bg-white border-b">
           <div className="px-4 lg:px-6 py-3">
             <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-600" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-600" />
               <Input
                 autoFocus
                 placeholder="Search services, stores, or categories"
                 value={query}
                 onChange={(e)=> setQuery(e.target.value)}
                 onKeyDown={submitFirst}
-                className="w-full pl-10 rounded-full shadow h-10 text-sm md:h-12 md:text-base lg:h-14 lg:text-lg border-2 border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-600"
+                className="w-full pl-12 rounded-full shadow h-14 text-lg border-2 border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-600"
               />
               {query && (
                 <button aria-label="Clear" className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-600/80" onClick={()=> setQuery("")}> <X className="w-4 h-4"/> </button>
