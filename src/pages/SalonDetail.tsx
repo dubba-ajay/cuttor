@@ -114,22 +114,23 @@ const SalonDetail = () => {
                     <h3 className="font-semibold mb-2">Services</h3>
                     <div className="divide-y border rounded-lg">
                       {categoryServices.map(svc => (
-                        <div key={svc.id} className="p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div key={svc.id} className="p-4 grid grid-cols-[1fr_auto] items-center gap-3">
                           <div className="min-w-0">
-                            <div className="font-medium">{svc.name}</div>
+                            <div className="font-medium truncate">{svc.name}</div>
                             <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-2">
                               <span>{svc.duration}</span>
                               <span>•</span>
                               <span className="font-semibold">{svc.price}</span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 sm:self-auto self-start">
-                            <Button
+                          <div className="flex items-center gap-2 whitespace-nowrap">
+                            <Button size="sm"
+                              className="h-8 px-3"
                               onClick={() => { setSelectedService(svc); setIsBookingOpen(true); }}
                             >
                               Book Now
                             </Button>
-                            <Link to={`/service/${svc.id}`} className="text-sm text-primary underline">Details</Link>
+                            <Link to={`/service/${svc.id}`} className="text-xs md:text-sm text-primary underline">Details</Link>
                           </div>
                         </div>
                       ))}
